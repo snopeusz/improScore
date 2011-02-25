@@ -1,4 +1,4 @@
-package impro.element
+package impro.score
 
 import processing.core._
 import PConstants._
@@ -12,65 +12,59 @@ beg - początek,
 dur - długość, 
 startPch - wysokość początkowa, 
 endPch - wysokość końcowa
+startDyn - początkowa dynamika
+endDyn - dynamika końcowa
 
+TODO: dodać parametr kontstruktora 'scoreWindow' - obiekt score.Window
+      z aktualnym oknem – pobierać z niedo wszystkie informacje o kontekście: x/y scale, pch2vertPos, app
 
-
+      
+  startPch: Float = 0.f, endPch: Float = 0.f, 
+  startDyn: Float = 0.5f, endDyn: Float = 0.5f
+  beg: Float = 0.f, dur: Float = 0.0f, 
+  val params: Map[String, Float] = Map[String, Float]()
 */
-case class ScoreElement (beg: Float, dur: Float, startPch: Float, endPch: Float) extends Maths
+abstract class Element extends Maths
 {
+  val beg: Float 
+  val dur: Float 
+  val params: Map[String, Float]
 
-  /* ilość pikseli na jedną sekundę/miarę (dur) */
-  val xscale :Float = 100.0f
-  /* ilość pikseli od nawyższego dźw. do najniższego */
-  val yscale :Float = 200.0f
-  /* funkcja przeliczająca wysokość na pionowe położenie */
-  // pch = (0..100)
-  var pch2vertPos :(Float => Float) = 
-  (pch: Float) => ((1.0f - (pch * 0.01f)) * yscale)
-
-  private var _img: Option[PImage] = None
+  def end: Float = beg + dur
 
   /* rysuje w określonym miejscu */
-  def drawAt(app: PApplet, origX: Float, origY: Float) {
-    val x0 = origX
-    val x1 = (dur * xscale) + origX
-    val y0 = origY + pch2vertPos(startPch)
-    val y1 = origY + pch2vertPos(endPch)
-    app.smooth
-    app.strokeWeight(4)
-    app.stroke(0)
-    app.line(x0, y0, x1, y1)
-  }
+  def draw(v: Window) 
 
-  def drawAtGC(gc: PGraphics) {
-    val x0 = 0.f
-    val x1 = (dur * xscale) 
-    val y0 =  pch2vertPos(startPch)
-    val y1 =  pch2vertPos(endPch)
-    gc.smooth
-    gc.strokeWeight(4)
-    gc.stroke(0)
-    gc.line(x0, y0, x1, y1)
-  }
-  /* @return PImage */
-  def makeImg  {
-    val pgWidth = (xscale * dur)
-    val pgHeight =
-      //(pch2vertPos(startPch) - pch2vertPos(endPch))
-      scala.math.max(pch2vertPos(startPch), pch2vertPos(endPch))
-    val pg = new PGraphicsJava2D
-    pg.setSize(pgWidth.toInt, pgHeight.toInt)
-    pg.beginDraw
-    pg.background(255,255)
-    drawAtGC(pg)
-    pg.endDraw
-    _img = Some(pg.asInstanceOf[PImage])
-    //_img = Some(pg)
-  }
-
-  def img : PImage = {
-    if (_img.isEmpty) makeImg
-    _img.orNull.get
-  }
+  def dumpVarsWithView(v: Window)
 }
 
+class SimpleNote (
+  val beg: Float,
+  val dur: Float,
+  val params: Map[String, Float]
+) extends Element  {
+  val pchStart: Float = params.getOrElse("pchStart", 0.f)
+
+  // debug:
+  def dumpVarsWithView(v: Window) {
+    replutils.printAttrValues(this)
+    println("-")
+    println("x: " + v.beats2X(beg))
+    println("y: " + v.pch2Y(pchStart))
+    println("--")
+  }
+
+ 
+  def draw(v: Window) 
+  {
+    val x = v.beats2X(beg)
+    val x1 = v.beats2W(1.f)
+    val y = v.pch2Y(pchStart)
+    val hh = v.pch2H(0.3f)
+    v.a.pushStyle
+    v.a.fill(0)
+    //v.a.rect(x, y - hh, x1,  hh)
+    v.a.ellipse(x, y - hh, x1,  hh)
+    v.a.popStyle
+  }
+}
