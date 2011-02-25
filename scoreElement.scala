@@ -5,25 +5,7 @@ import PConstants._
 import PApplet._
 
 import impro.spde._
-/*
-Najprostsza wersja: linia o stałej grubości.
-pola: 
-beg - początek, 
-dur - długość, 
-startPch - wysokość początkowa, 
-endPch - wysokość końcowa
-startDyn - początkowa dynamika
-endDyn - dynamika końcowa
 
-TODO: dodać parametr kontstruktora 'scoreWindow' - obiekt score.Window
-      z aktualnym oknem – pobierać z niedo wszystkie informacje o kontekście: x/y scale, pch2vertPos, app
-
-      
-  startPch: Float = 0.f, endPch: Float = 0.f, 
-  startDyn: Float = 0.5f, endDyn: Float = 0.5f
-  beg: Float = 0.f, dur: Float = 0.0f, 
-  val params: Map[String, Float] = Map[String, Float]()
-*/
 abstract class Element extends Maths
 {
   val beg: Float 

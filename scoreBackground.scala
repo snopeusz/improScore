@@ -5,13 +5,6 @@ import PConstants._
 //import PApplet._
 import impro.spde._
 
-/*
-Zbiera nuty i wyświetla w oknie - generuje score.Element-y (metody addElement(...) )
-wyświetla kursor
-przechowuje aktualną pozycję
-
-*/
-
 
 class Window(
   val a: PApplet,
@@ -51,6 +44,13 @@ class Window(
   private var _elements = new ArrayBuffer[Element]
 
   //dumpVars
+
+  def pos = _pos
+  def pos_= (newPos: Float) {
+    _pos = newPos
+    // + czyszczenie _elements
+    
+  }
 
   // calculate and cache vars dependant on other parms
   private def calculateInternals {
@@ -103,6 +103,9 @@ class Window(
     // elements in score area:
     for (element <- _elements.toArray)
       element.draw(this)
+    // TODO:
+    // iterować dopóki element.end < timeWindow, potem out
+    // czyli jakieś while, albo łączenie przez views
   }
 
   def addElement(newElement: Element) {

@@ -34,16 +34,17 @@ class Score extends PApplet with Colors with Maths with Randoms {
       //Map[String, Float]
     ))
 
-
   //scoreView.dumpVars
 
+  var pos: Float = 0.f
+
   override def setup() {
-    size(1000, 700)
+    //size(1000, 700)
+    size(700, 500)
     frameRate(24)
     smooth
     frame.setTitle("The Score")
     //oscP5; // właściwa inicjacja (lazy)
-    // view // inicjacja score.Window
     scoreView.viewX = 30
     scoreView.viewY = 50
 
@@ -51,7 +52,10 @@ class Score extends PApplet with Colors with Maths with Randoms {
 
   override def draw() {
     background(255)
+    scoreView.pos = pos
     scoreView.draw
+
+    pos += 0.1f
   }
 
   /*
