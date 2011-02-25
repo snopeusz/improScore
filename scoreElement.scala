@@ -10,7 +10,7 @@ abstract class Element extends Maths
 {
   val beg: Float 
   val dur: Float 
-  val params: Map[String, Float]
+  val params: Map[String, Any]
 
   def end: Float = beg + dur
 
@@ -22,10 +22,12 @@ abstract class Element extends Maths
 
 class SimpleNote (
   val beg: Float,
-  val dur: Float,
-  val params: Map[String, Float]
+  val dummydur: Float,
+  val params: Map[String, Any]
 ) extends Element  {
-  val pchStart: Float = params.getOrElse("pchStart", 0.f)
+  val dur = 1.f
+  val pchStart: Float = params.getOrElse("pchStart", 0.f).asInstanceOf[Float]
+  val fillcolor: Int = params.getOrElse("fillColor", 0).asInstanceOf[Int]
 
   // debug:
   def dumpVarsWithView(v: Window) {
@@ -40,12 +42,12 @@ class SimpleNote (
   def draw(v: Window) 
   {
     val x = v.beats2X(beg)
-    val x1 = v.beats2W(1.f)
+    //val x1 = v.beats2W(1.f)
     val y = v.pch2Y(pchStart)
-    val hh = v.pch2H(0.3f)
+    val hh = v.pch2H(0.5f)
+    val x1 = v.pch2H(1.1f)
     v.a.pushStyle
-    v.a.fill(0)
-    //v.a.rect(x, y - hh, x1,  hh)
+    v.a.fill(fillcolor)
     v.a.ellipse(x, y - hh, x1,  hh)
     v.a.popStyle
   }

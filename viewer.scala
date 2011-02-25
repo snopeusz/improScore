@@ -26,6 +26,7 @@ class Score extends PApplet with Colors with Maths with Randoms {
 
   val scoreView = new score.Window(this) 
 
+  // TESTING: adding dummy data
   for (i <- Iterator.range(0, 5))
     scoreView.addElement( new score.SimpleNote (
       (math.random * 10).toFloat,

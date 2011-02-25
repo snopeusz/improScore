@@ -49,7 +49,8 @@ class Window(
   def pos_= (newPos: Float) {
     _pos = newPos
     // + czyszczenie _elements
-    
+    ((_elements.toArray filter (e => e.end < _pos)) 
+      foreach (e => _elements -= e))
   }
 
   // calculate and cache vars dependant on other parms
@@ -99,7 +100,11 @@ class Window(
 
   */
   def draw {
+    // borders of view
     a.rect(viewX, viewY, viewWidth, viewHeight)
+    val headScoreBorderX = viewX + headWidth
+    a.line(headScoreBorderX, viewY,headScoreBorderX, viewY+viewHeight)
+
     // elements in score area:
     for (element <- _elements.toArray)
       element.draw(this)
