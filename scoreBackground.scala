@@ -51,6 +51,8 @@ class Window(
   import scala.collection.mutable.ArrayBuffer
   private var _elements = new ArrayBuffer[Element]
 
+  private var _headerElements = new ArrayBuffer[Element]
+
   //dumpVars
 
   def pos = _pos
@@ -131,6 +133,20 @@ class Window(
       element <- _elements.toArray
       if (element.beg < _pos + _timeWindow - _posOffset) 
     } element.draw(this)
+
+    // todo: gradient za nagłówkiem (white->transparent)
+    a.pushStyle
+    a.fill(255)
+    a.noStroke
+    a.rect(viewX, viewY, headWidth, viewHeight)
+    a.popStyle
+
+    // elements in header area:
+    for {
+      element <- _headerElements.toArray
+    } element.draw(headerWindow)
+
+    // ...
   }
 
   def addElement(newElement: Element) {
@@ -143,16 +159,14 @@ class Window(
     }
   }
 
-  /*
-  def setPos (newPos: Float) {
-    pos = newPos
-    val removeIndex = elements indexWhere (
-      e => { (e.beg + e.dur) >= newPos }
-    )
-    elements trimStart (removeIndex - 1)
+  def addHeaderElement(newElement: Element) {
+    if (newElement.beg < 1.0) {
+      _headerElements += newElement
+    }
   }
-  */
 
+  def clearHeader = _headerElements.clear()
+  
 
   // debugging:
   def dumpVars {
