@@ -127,6 +127,12 @@ class Window(
     a.rect(viewX, viewY, viewWidth, viewHeight)
     val headScoreBorderX = viewX + headWidth
     a.line(headScoreBorderX, viewY,headScoreBorderX, viewY+viewHeight)
+    // cursor:
+    a.pushStyle
+    a.fill(20, 200, 85, 40)
+    a.noStroke
+    a.rect(viewX + posXposition, viewY, posWindowWidth, viewHeight)
+    a.popStyle
 
     // elements in score area:
     for {
