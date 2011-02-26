@@ -12,7 +12,8 @@ import impro._
 
 object ScoreRunner {
   def main(args: Array[String]) {
-    PApplet.main(args ++ Array("impro.Score") ) 
+    //PApplet.main(args ++ Array("--present", "impro.Score") ) 
+    PApplet.main(args  ++ Array("impro.Score") ) 
   }
 }
 
@@ -20,39 +21,35 @@ class Score extends PApplet with Colors with Maths with Randoms {
 
   import PApplet._
 
+
   //lazy val oscP5 = new OscP5(this, 12000)
   //val myRemoteLocation = new NetAddress("127.0.0.1", 12000)
   //val myRemoteLocation = new NetAddress("127.0.0.1", 57120)
 
-  val scoreView = new score.Window(this, 800, 400) 
+  //val scoreView = new score.Window(this, 1280, 500, 0.1f) 
+  lazy val scoreView = new score.Window(this, width, height, 0.1f) 
 
-  // TESTING: adding dummy data
-  for (i <- Iterator.range(0, 15))
-    scoreView.addElement( new score.SimpleLine (
-      (math.random * 30).toFloat,
-      (math.random * 10).toFloat,
-      Map("pch" -> (math.random * 10).toInt.toFloat, 
-        "pchEnd" -> (math.random * 10).toInt.toFloat,
-        "dyn" -> (math.random * 0.75f + 0.25f).toFloat )
-      //Map[String, Float]
-    ))
-  //scoreView.addElement( new score.Staff5 (1.f, 25.f, Map()))
-  scoreView.addElement( new score.StaffReg3 (1.f, 25.f, Map()))
+  lazy val fontReg = loadFont("lib/TeXGyreTermes-Regular-48.vlw")
 
   //scoreView.dumpVars
 
   var pos: Float = 0.f
 
+
   override def setup() {
-    size(1000, 800)
+    size(1280, 500)
+    //size(920, 420)
+    //size(1000, 800)
     //size(700, 500)
-    frameRate(24)
+    frameRate(30)
     smooth
     frame.setTitle("The Score")
     //oscP5; // właściwa inicjacja (lazy)
-    scoreView.viewX = 30
-    scoreView.viewY = 50
-
+    scoreView.viewX = 0
+    scoreView.viewY = 0
+    prepareDummyDataForTests
+    //fontReg
+    textFont(fontReg)
   }
 
   override def draw() {
@@ -61,8 +58,16 @@ class Score extends PApplet with Colors with Maths with Randoms {
     scoreView.draw
 
     pos += 0.03f
+
+    pushStyle
+    fill(0)
+    text(frameRate.toString, 150, 150);
+    popStyle
   }
 
+  // tests...
+  override def mousePressed() = scoreView.clearHeader
+  
   /*
   override def mousePressed() {
     val myMessage  = new OscMessage("/test")
@@ -78,6 +83,23 @@ class Score extends PApplet with Colors with Maths with Randoms {
     background(random(127))
   }
   */
+
+  def prepareDummyDataForTests {
+    // TESTING: adding dummy data
+    for (i <- Iterator.range(0, 15))
+      scoreView.addElement( new score.SimpleLine (
+        (math.random * 30).toFloat,
+        (math.random * 10).toFloat,
+        Map("pch" -> (math.random * 10).toInt.toFloat, 
+          "pchEnd" -> (math.random * 10).toInt.toFloat,
+          "dyn" -> (math.random * 0.75f + 0.25f).toFloat )
+        //Map[String, Float]
+      ))
+    scoreView.addElement( new score.Staff5 (1.f, 15.f, Map()))
+    scoreView.addElement( new score.StaffReg3 (16.f, 25.f, Map()))
+
+    scoreView.addHeaderElement( new score.Staff5 (0.f, 1.f, Map()))
+  }
 
 }
 
