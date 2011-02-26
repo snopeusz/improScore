@@ -106,11 +106,10 @@ class Window(
     a.line(headScoreBorderX, viewY,headScoreBorderX, viewY+viewHeight)
 
     // elements in score area:
-    for (element <- _elements.toArray)
-      element.draw(this)
-    // TODO:
-    // iterować dopóki element.end < timeWindow, potem out
-    // czyli jakieś while, albo łączenie przez views
+    for {
+      element <- _elements.toArray
+      if (element.beg < _pos + _timeWindow - _posOffset) 
+    } element.draw(this)
   }
 
   def addElement(newElement: Element) {
