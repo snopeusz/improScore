@@ -44,11 +44,19 @@ class SimpleNote (
  
   def draw(v: Window) 
   {
-    val x = v.beats2X(beg)
     //val x1 = v.beats2W(1.f)
-    val y = v.pch2Y(pchStart)
-    val hh = v.pch2H(0.5f)
-    val x1 = v.pch2H(1.1f)
+    val yu = v.pch2H(1.0f)
+    val w = yu * 2.f * dyn
+    val h = yu * 1.5f * dyn
+    val x = v.beats2X(beg) + (w * 0.5f)
+    val y = v.pch2Y(pch)
+    v.a.pushStyle
+    v.a.fill(color)
+    //v.a.ellipseMode(CORNER)
+    v.a.ellipse(x, y , w, h)
+    v.a.popStyle
+  }
+}
     v.a.pushStyle
     v.a.fill(fillcolor)
     v.a.ellipse(x, y - hh, x1,  hh)
