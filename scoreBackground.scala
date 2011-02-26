@@ -151,11 +151,12 @@ class Window(
 
   def addElement(newElement: Element) {
     if (newElement.end > _pos) {
-      val beg = newElement.beg
-      val addAtIndex = (_elements indexWhere (e => { beg > e.beg })) + 1
-      println("adding new element at " + addAtIndex + 
-          ", beg=" + beg)
-      _elements insert (addAtIndex, newElement)
+      //val beg = newElement.beg
+      //val addAtIndex = (_elements indexWhere (e => { beg > e.beg })) + 1
+      //println("adding new element at " + addAtIndex + 
+          //", beg=" + beg)
+      //_elements insert (addAtIndex, newElement)
+      _elements += newElement
     }
   }
 
