@@ -15,7 +15,7 @@ abstract class Element extends Maths
   def end: Float = beg + dur
 
   /* rysuje w określonym miejscu */
-  def draw(v: Window) 
+  def draw(v: ViewForScore) 
 
   def dumpVarsWithView(v: Window) {
     replutils.printAttrValues(this)
@@ -42,7 +42,7 @@ class SimpleNote (
   }
 
  
-  def draw(v: Window) 
+  def draw(v: ViewForScore) 
   {
     //val x1 = v.beats2W(1.f)
     val yu = v.pch2H(1.0f)
@@ -68,7 +68,7 @@ class SimpleLine (
   val color: Int = params.getOrElse("color", 0).asInstanceOf[Int]
   val dyn: Float = params.getOrElse("dyn", 0.f).asInstanceOf[Float]
 
-  def draw(v: Window) 
+  def draw(v: ViewForScore) 
   {
     //val x1 = v.beats2W(1.f)
     val yu = v.pch2H(1.0f)
@@ -90,8 +90,10 @@ class Staff5 (
   val dur: Float,
   val params: Map[String, Any]
 ) extends Element  {
+  
   val color: Int = params.getOrElse("color", 0).asInstanceOf[Int]
-  def draw(v: Window) 
+
+  def draw(v: ViewForScore) 
   {
     val x = v.beats2X(beg)
     val x1 = v.beats2X(end)
@@ -115,7 +117,7 @@ class StaffReg3 (
   val params: Map[String, Any]
 ) extends Element  {
   val color: Int = params.getOrElse("color", 2139062271).asInstanceOf[Int]
-  def draw(v: Window) 
+  def draw(v: ViewForScore) 
   {
     val x = v.beats2X(beg)
     val x1 = v.beats2X(end)

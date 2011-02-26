@@ -5,6 +5,13 @@ import PConstants._
 //import PApplet._
 import impro.spde._
 
+abstract class ViewForScore {
+  val a: PApplet
+  def pch2Y (pch: Float): Float 
+  def pch2H (pch: Float): Float
+  def beats2X (beats: Float): Float
+  def beats2W (beats: Float): Float 
+}
 
 class Window(
   val a: PApplet,
@@ -12,7 +19,7 @@ class Window(
   val viewHeight: Float = 400.f,
   val xHeadRatio: Float = 0.15f,
   val yMarginRatio: Float = 0.05f
-) extends Maths
+) extends ViewForScore with Maths
 {
   assert(xHeadRatio < 1.f, "xHeadRatio smaller than 1")
   assert(yMarginRatio < 1.f, "yMarginRatio smaller than 1")
@@ -89,7 +96,19 @@ class Window(
     viewX + headWidth + posOffsetWidth +
     ((beats - _pos) * xUnit)
   def beats2W (beats: Float): Float = xUnit * beats
-  // --------------------------------------------
+  // -------------------------------------------- //
+
+  val temp_a = a
+  val headerWindow = new ViewForScore {
+    val a: PApplet = temp_a
+    def pch2Y (pch: Float): Float = 
+      viewY + yCenter + (pch * yUnit * -1.f)
+    def pch2H (pch: Float): Float = yUnit * pch
+    // header window: beats 0..1 => Left..Right
+    def beats2X (beats: Float): Float =
+      viewX + (headWidth * beats)
+    def beats2W (beats: Float): Float = headWidth * beats
+  } 
 
   /*
   rysuje partyturę na wyznaczonym obszarze:
