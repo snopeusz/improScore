@@ -80,9 +80,26 @@ class Staff5 (
     v.a.popStyle
   }
 }
+
+class StaffReg3 (
+  val beg: Float,
+  val dur: Float,
+  val params: Map[String, Any]
+) extends Element  {
+  val color: Int = params.getOrElse("color", 2139062271).asInstanceOf[Int]
+  def draw(v: Window) 
+  {
+    val x = v.beats2X(beg)
+    val x1 = v.beats2X(end)
+    val y = v.pch2Y(0.f)
+    val h = v.pch2H(1.f)
     v.a.pushStyle
-    v.a.fill(fillcolor)
-    v.a.ellipse(x, y - hh, x1,  hh)
+    v.a.stroke(color)
+    v.a.strokeWeight(h * 0.2f)
+    v.a.line(x, y + (20*h) , x1, y + (20*h))
+    v.a.line(x, y + (7*h) , x1, y + (7*h))
+    v.a.line(x, y - (20*h) , x1, y - (20*h))
+    v.a.line(x, y - (7*h) , x1, y - (7*h))
     v.a.popStyle
   }
 }
