@@ -35,7 +35,7 @@ class Window(
 
   // in beats:
   private var _pos: Float = 0.f
-  private var _timeWindow: Float = 30.f
+  private var _timeWindow: Float = 10.f
   private var _posOffset: Float = 1.f
   private var _posWindow: Float = 0.5f
 
