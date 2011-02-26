@@ -28,8 +28,9 @@ class SimpleNote (
   val params: Map[String, Any]
 ) extends Element  {
   val dur = 1.f
-  val pchStart: Float = params.getOrElse("pchStart", 0.f).asInstanceOf[Float]
-  val fillcolor: Int = params.getOrElse("fillColor", 0).asInstanceOf[Int]
+  val pch: Float = params.getOrElse("pch", 0.f).asInstanceOf[Float]
+  val color: Int = params.getOrElse("color", 0).asInstanceOf[Int]
+  val dyn: Float = params.getOrElse("dyn", 0.f).asInstanceOf[Float]
 
   // debug:
   override def dumpVarsWithView(v: Window) {
