@@ -83,7 +83,7 @@ class Window(
 
   // --- available in Elements' 'draw' method --- //
   def pch2Y (pch: Float): Float = 
-    viewY + yCenter + (pch * yUnit)
+    viewY + yCenter + (pch * yUnit * -1.f)
   def pch2H (pch: Float): Float = yUnit * pch
   def beats2X (beats: Float): Float =
     viewX + headWidth + posOffsetWidth +
