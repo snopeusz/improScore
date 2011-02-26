@@ -57,6 +57,34 @@ class SimpleNote (
     v.a.popStyle
   }
 }
+
+class SimpleLine (
+  val beg: Float,
+  val dur: Float,
+  val params: Map[String, Any]
+) extends Element  {
+  val pch: Float = params.getOrElse("pch", 0.f).asInstanceOf[Float]
+  val pchEnd: Float = params.getOrElse("pchEnd", pch).asInstanceOf[Float]
+  val color: Int = params.getOrElse("color", 0).asInstanceOf[Int]
+  val dyn: Float = params.getOrElse("dyn", 0.f).asInstanceOf[Float]
+
+  def draw(v: Window) 
+  {
+    //val x1 = v.beats2W(1.f)
+    val yu = v.pch2H(1.0f)
+    val x = v.beats2X(beg)
+    val y = v.pch2Y(pch)
+    val x1 = v.beats2X(end)
+    val y1 = v.pch2Y(pchEnd)
+    val lineWidth = yu * dyn
+    v.a.pushStyle
+    v.a.fill(color)
+    v.a.strokeWeight(lineWidth)
+    v.a.line(x, y, x1, y1)
+    v.a.popStyle
+  }
+}
+
 class Staff5 (
   val beg: Float,
   val dur: Float,
