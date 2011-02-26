@@ -57,6 +57,29 @@ class SimpleNote (
     v.a.popStyle
   }
 }
+class Staff5 (
+  val beg: Float,
+  val dur: Float,
+  val params: Map[String, Any]
+) extends Element  {
+  val color: Int = params.getOrElse("color", 0).asInstanceOf[Int]
+  def draw(v: Window) 
+  {
+    val x = v.beats2X(beg)
+    val x1 = v.beats2X(end)
+    val y = v.pch2Y(0.f)
+    val h = v.pch2H(1.f)
+    v.a.pushStyle
+    v.a.stroke(color)
+    v.a.strokeWeight(h * 0.2f)
+    v.a.line(x, y , x1, y)
+    v.a.line(x, y + (2*h) , x1, y + (2*h))
+    v.a.line(x, y + (4*h) , x1, y + (4*h))
+    v.a.line(x, y - (2*h) , x1, y - (2*h))
+    v.a.line(x, y - (4*h) , x1, y - (4*h))
+    v.a.popStyle
+  }
+}
     v.a.pushStyle
     v.a.fill(fillcolor)
     v.a.ellipse(x, y - hh, x1,  hh)
