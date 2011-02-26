@@ -46,6 +46,7 @@ class Window(
 
   private var posOffsetWidth: Float = _posOffset * xUnit
   private var posWindowWidth: Float = _posWindow * xUnit
+  private var posXposition: Float = headWidth + posOffsetWidth
   
   import scala.collection.mutable.ArrayBuffer
   private var _elements = new ArrayBuffer[Element]
@@ -65,6 +66,7 @@ class Window(
     xUnit = scoreWidth / _timeWindow
     posOffsetWidth = _posOffset * xUnit
     posWindowWidth = _posWindow * xUnit
+    posXposition = headWidth + posOffsetWidth
   }
 
   // timeWindow: how much a performer see
