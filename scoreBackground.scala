@@ -124,9 +124,10 @@ class Window(
   */
   def draw {
     // borders of view
-    a.rect(viewX, viewY, viewWidth, viewHeight)
-    val headScoreBorderX = viewX + headWidth
-    a.line(headScoreBorderX, viewY,headScoreBorderX, viewY+viewHeight)
+    //a.rect(viewX, viewY, viewWidth, viewHeight)
+    //val headScoreBorderX = viewX + headWidth
+    //a.line(headScoreBorderX, viewY,headScoreBorderX, viewY+viewHeight)
+
     // cursor:
     a.pushStyle
     a.fill(20, 200, 85, 40)
