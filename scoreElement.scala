@@ -17,7 +17,9 @@ abstract class Element extends Maths
   /* rysuje w określonym miejscu */
   def draw(v: Window) 
 
-  def dumpVarsWithView(v: Window)
+  def dumpVarsWithView(v: Window) {
+    replutils.printAttrValues(this)
+  }
 }
 
 class SimpleNote (
@@ -30,11 +32,11 @@ class SimpleNote (
   val fillcolor: Int = params.getOrElse("fillColor", 0).asInstanceOf[Int]
 
   // debug:
-  def dumpVarsWithView(v: Window) {
+  override def dumpVarsWithView(v: Window) {
     replutils.printAttrValues(this)
     println("-")
     println("x: " + v.beats2X(beg))
-    println("y: " + v.pch2Y(pchStart))
+    println("y: " + v.pch2Y(pch))
     println("--")
   }
 
