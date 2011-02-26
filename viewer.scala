@@ -24,24 +24,28 @@ class Score extends PApplet with Colors with Maths with Randoms {
   //val myRemoteLocation = new NetAddress("127.0.0.1", 12000)
   //val myRemoteLocation = new NetAddress("127.0.0.1", 57120)
 
-  val scoreView = new score.Window(this) 
+  val scoreView = new score.Window(this, 800, 400) 
 
   // TESTING: adding dummy data
-  for (i <- Iterator.range(0, 5))
-    scoreView.addElement( new score.SimpleNote (
+  for (i <- Iterator.range(0, 15))
+    scoreView.addElement( new score.SimpleLine (
+      (math.random * 30).toFloat,
       (math.random * 10).toFloat,
-      (math.random * 10).toFloat,
-      Map("pchStart" -> (math.random * 10).toFloat)
+      Map("pch" -> (math.random * 10).toInt.toFloat, 
+        "pchEnd" -> (math.random * 10).toInt.toFloat,
+        "dyn" -> (math.random * 0.75f + 0.25f).toFloat )
       //Map[String, Float]
     ))
+  //scoreView.addElement( new score.Staff5 (1.f, 25.f, Map()))
+  scoreView.addElement( new score.StaffReg3 (1.f, 25.f, Map()))
 
   //scoreView.dumpVars
 
   var pos: Float = 0.f
 
   override def setup() {
-    //size(1000, 700)
-    size(700, 500)
+    size(1000, 800)
+    //size(700, 500)
     frameRate(24)
     smooth
     frame.setTitle("The Score")
@@ -56,7 +60,7 @@ class Score extends PApplet with Colors with Maths with Randoms {
     scoreView.pos = pos
     scoreView.draw
 
-    pos += 0.1f
+    pos += 0.03f
   }
 
   /*
