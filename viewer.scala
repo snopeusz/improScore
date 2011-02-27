@@ -22,9 +22,9 @@ class Score extends PApplet with Colors with Maths with Randoms {
   import PApplet._
 
 
-  //lazy val oscP5 = new OscP5(this, 12000)
+  lazy val oscP5 = new OscP5(this, 12000)
   //val myRemoteLocation = new NetAddress("127.0.0.1", 12000)
-  //val myRemoteLocation = new NetAddress("127.0.0.1", 57120)
+  val myRemoteLocation = new NetAddress("127.0.0.1", 57120)
 
   //val scoreView = new score.Window(this, 1280, 500, 0.1f) 
   lazy val scoreView = new score.Window(this, width, height, 0.1f) 
@@ -44,7 +44,7 @@ class Score extends PApplet with Colors with Maths with Randoms {
     frameRate(30)
     smooth
     frame.setTitle("The Score")
-    //oscP5; // właściwa inicjacja (lazy)
+    oscP5 // właściwa inicjacja (lazy)
     scoreView.viewX = 0
     scoreView.viewY = 0
     prepareDummyDataForTests
@@ -66,7 +66,7 @@ class Score extends PApplet with Colors with Maths with Randoms {
   }
 
   // tests...
-  override def mousePressed() = scoreView.clearHeader
+  //override def mousePressed() = scoreView.clearHeader
   
   /*
   override def mousePressed() {
@@ -74,15 +74,16 @@ class Score extends PApplet with Colors with Maths with Randoms {
     myMessage.add(123)
     oscP5.send(myMessage, myRemoteLocation)
   }
-
+  */
 
   def oscEvent(theOscMessage :OscMessage) {
-    println("### received an osc message." + 
-      " addrpattern: " + theOscMessage.addrPattern() + 
-      " typetag: " + theOscMessage.typetag() )
-    background(random(127))
+    println("### received an osc message."  
+      + " addrpattern: " + theOscMessage.addrPattern 
+      + " typetag: " + theOscMessage.typetag
+      + " from: " + theOscMessage.address + ":" + theOscMessage.port
+    )
+    //background(random(127))
   }
-  */
 
   def prepareDummyDataForTests {
     // TESTING: adding dummy data
