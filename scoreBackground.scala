@@ -58,9 +58,9 @@ class Window(
   def pos = _pos
   def pos_= (newPos: Float) {
     _pos = newPos
-    // + czyszczenie _elements
-    ((_elements.toArray filter (e => e.end < _pos)) 
-      foreach (e => _elements -= e))
+    // [removed] - czyszczenie _elements
+    //((_elements.toArray filter (e => e.end < _pos)) 
+    //  foreach (e => _elements -= e))
   }
 
   // calculate and cache vars dependant on other parms
@@ -135,10 +135,11 @@ class Window(
     a.rect(viewX + posXposition, viewY, posWindowWidth, viewHeight)
     a.popStyle
 
-    // elements in score area:
+    // *** SCORE ELEMENTS
     for {
       element <- _elements.toArray
-      if (element.beg < _pos + _timeWindow - _posOffset) 
+      if ((element.beg < _pos + _timeWindow - _posOffset) 
+        && (element.end > _pos - _posOffset))
     } element.draw(this)
 
     // todo: gradient za nagłówkiem (white->transparent)
@@ -148,7 +149,7 @@ class Window(
     a.rect(viewX, viewY, headWidth, viewHeight)
     a.popStyle
 
-    // elements in header area:
+    // *** HEADER ELEMENTS
     for {
       element <- _headerElements.toArray
     } element.draw(headerWindow)
