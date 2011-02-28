@@ -22,7 +22,7 @@ abstract class Element extends Maths
   }
 }
 
-class SimpleNote (
+case class SimpleNote (
   val beg: Float,
   val dummydur: Float,
   val params: Map[String, Any]
@@ -58,7 +58,7 @@ class SimpleNote (
   }
 }
 
-class SimpleLine (
+case class SimpleLine (
   val beg: Float,
   val dur: Float,
   val params: Map[String, Any]
@@ -85,7 +85,7 @@ class SimpleLine (
   }
 }
 
-class Staff5 (
+case class Staff5 (
   val beg: Float,
   val dur: Float,
   val params: Map[String, Any]
@@ -111,7 +111,7 @@ class Staff5 (
   }
 }
 
-class StaffReg3 (
+case class StaffReg3 (
   val beg: Float,
   val dur: Float,
   val params: Map[String, Any]
