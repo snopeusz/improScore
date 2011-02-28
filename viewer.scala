@@ -61,7 +61,11 @@ class Score extends PApplet with Colors with Maths with Randoms {
 
     pushStyle
     fill(0)
-    text(frameRate.toString, 150, 150);
+    text(frameRate.toString take 6, 10, 150);
+    fill(55,0,0)
+    text(pos.toString take 6, 10, 100);
+    fill(0,55,0)
+    text(scoreView.elementsNumber.toString, 10, 50);
     popStyle
   }
 
