@@ -99,16 +99,15 @@ class Score extends PApplet with Colors with Maths with Randoms {
   private def elementTypetag2Props (msg:OscMessage): Map[String, Any] = {
     var props = scala.collection.mutable.Map[String, Any]()
     rsplit2(msg.typetag drop 3).zipWithIndex foreach { 
-      t =>  
-          t._1 match {
-            case "si" => props += (msg.get(t._2 * 2 + 3).stringValue -> 
-              msg.get(t._2 * 2 + 4).intValue)
-            case "sf" => props += (msg.get(t._2 * 2 + 3).stringValue -> 
-              msg.get(t._2 * 2 + 4).floatValue)
-            case "ss" => props += (msg.get(t._2 * 2 + 3).stringValue -> 
-              msg.get(t._2 * 2 + 4).stringValue)
-            case _ =>
-          }
+      t => t._1 match {
+        case "si" => props += (msg.get(t._2 * 2 + 3).stringValue -> 
+          msg.get(t._2 * 2 + 4).intValue)
+        case "sf" => props += (msg.get(t._2 * 2 + 3).stringValue -> 
+          msg.get(t._2 * 2 + 4).floatValue)
+        case "ss" => props += (msg.get(t._2 * 2 + 3).stringValue -> 
+          msg.get(t._2 * 2 + 4).stringValue)
+        case _ =>
+      }
     }
     props.toMap
   }
