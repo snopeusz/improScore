@@ -178,6 +178,7 @@ class Window(
   def clearHeader = _headerElements.clear()
   
 
+  def elementsNumber :Int = _elements.size
   // debugging:
   def dumpVars {
      replutils.printAttrValues(this)
