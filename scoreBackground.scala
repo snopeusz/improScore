@@ -175,7 +175,9 @@ class Window(
     }
   }
 
+  // TODO: clear only selected time area (beg,dur)
   def clearScore = _elements.clear()
+
   def clearHeader = _headerElements.clear()
   
 

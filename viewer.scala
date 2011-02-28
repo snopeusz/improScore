@@ -152,6 +152,7 @@ class Score extends PApplet with Colors with Maths with Randoms {
   private def msgClear (msg: OscMessage, theView: score.Window) {
     println("clear score!")
     theView.clearScore
+    // TODO: clear only selected time area (beg,dur)
   }
 
   private def msgClearHeader (msg: OscMessage, theView: score.Window) {
@@ -161,15 +162,19 @@ class Score extends PApplet with Colors with Maths with Randoms {
 
   private def msgSetTimeWindow (msg: OscMessage, theView: score.Window) {
     println("set timeWindow!")
+    // TODO
   }
   private def msgSetPosWindow (msg: OscMessage, theView: score.Window) {
     println("set posWindow!")
+    // TODO
   }
   private def msgSetPosOffset (msg: OscMessage, theView: score.Window) {
     println("set posOffset!")
+    // TODO
   }
   private def msgSetSpeed (msg: OscMessage, theView: score.Window) {
     println("set speed!")
+    // TODO
   }
 
   // this should be in scoreElement.scala, shouldn't it ?
