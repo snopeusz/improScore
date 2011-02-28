@@ -174,6 +174,7 @@ class Window(
     }
   }
 
+  def clearScore = _elements.clear()
   def clearHeader = _headerElements.clear()
   
 
