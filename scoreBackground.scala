@@ -53,6 +53,8 @@ class Window(
 
   private var _headerElements = new ArrayBuffer[Element]
 
+  var partID: Int = 0
+
   //dumpVars
 
   def pos = _pos
