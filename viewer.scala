@@ -80,13 +80,7 @@ class Score extends PApplet with Colors with Maths with Randoms {
   }
   */
 
-  val names2elements = Map(
-    "simpleLine"    -> score.SimpleLine,
-    "simpleNote"    -> score.SimpleNote,
-    "staff5"        -> score.Staff5,
-    "staffReg3"     -> score.StaffReg3
-  )
-
+  /* ==== Utility methods for handling OSC traffic ==== */
   // general purpose function
   def rsplit2(str: String, list: List[String] = List()): List[String] = {
     val (str1, str2) = str splitAt 2
@@ -125,40 +119,66 @@ class Score extends PApplet with Colors with Maths with Randoms {
     }
   }
 
-  private def msgAddElement (elemName: String, msg: OscMessage) {
+  // proper handling of OSC traffic
+  private def msgAddElement (
+    elemName: String, msg: OscMessage, theView: score.Window
+  ) {
     msgToElement(elemName, msg) match {
-      case Some(elem) => scoreView.addElement(elem)
+      case Some(elem) => theView.addElement(elem)
       case _ =>
     }
   }
 
-  private def msgAddElementToHeader (elemName: String, msg: OscMessage) {
+  private def msgAddElementToHeader (
+    elemName: String, msg: OscMessage, theView: score.Window
+  ) {
     msgToElement(elemName, msg) match {
-      case Some(elem) => scoreView.addHeaderElement(elem)
+      case Some(elem) => theView.addHeaderElement(elem)
       case _ =>
     }
   }
 
-  private def msgSync (msg: OscMessage) {
+  private def msgSync (msg: OscMessage, theView: score.Window) {
     println("syncing!")
   }
 
-  private def msgSetPos (msg: OscMessage) {
+  private def msgSetPos (msg: OscMessage, theView: score.Window) {
     println("set pos!")
     if (msg.typetag startsWith "if") {
       pos = msg.get(1).floatValue
     }
   }
 
-  private def msgClear (msg: OscMessage) {
+  private def msgClear (msg: OscMessage, theView: score.Window) {
     println("clear score!")
-    scoreView.clearScore
+    theView.clearScore
   }
 
-  private def msgClearHeader (msg: OscMessage) {
+  private def msgClearHeader (msg: OscMessage, theView: score.Window) {
     println("clear header!")
-    scoreView.clearHeader
+    theView.clearHeader
   }
+
+  private def msgSetTimeWindow (msg: OscMessage, theView: score.Window) {
+    println("set timeWindow!")
+  }
+  private def msgSetPosWindow (msg: OscMessage, theView: score.Window) {
+    println("set posWindow!")
+  }
+  private def msgSetPosOffset (msg: OscMessage, theView: score.Window) {
+    println("set posOffset!")
+  }
+  private def msgSetSpeed (msg: OscMessage, theView: score.Window) {
+    println("set speed!")
+  }
+
+  // this should be in scoreElement.scala, shouldn't it ?
+  val names2elements = Map(
+    "simpleLine"    -> score.SimpleLine,
+    "simpleNote"    -> score.SimpleNote,
+    "staff5"        -> score.Staff5,
+    "staffReg3"     -> score.StaffReg3
+  )
 
   import scala.util.matching.Regex
   val OSCADDR_RE_ADD = new Regex("""/imps/add/(.+)""")
@@ -166,7 +186,11 @@ class Score extends PApplet with Colors with Maths with Randoms {
   val OSCADDR_SYNC = "/imps/sync"
   val OSCADDR_CLEAR = "/imps/clear"
   val OSCADDR_HCLEAR = "/imps/hclear"
-  val OSCADDR_SETPOS = "/imps/setpos"
+  val OSCADDR_SETPOS = "/imps/setPos"
+  val OSCADDR_SETTIMEWIN = "/imps/setTimeWin"
+  val OSCADDR_SETPOSWIN = "/imps/setPosWin"
+  val OSCADDR_SETPOSOFFSET = "/imps/setPosOffset"
+  val OSCADDR_SETSPEED = "/imps/setSpeed"
 
   // *** MAIN OSC RESPONDER:
   def oscEvent(msg :OscMessage) {
@@ -174,14 +198,20 @@ class Score extends PApplet with Colors with Maths with Randoms {
     val tt = msg.typetag
     val ip = msg.address
     val port = msg.port
+    val theView = scoreView
 
+    if (addr.startsWith("/imps") && tt.startsWith("i"))
     addr match {
-      case OSCADDR_SYNC => msgSync(msg)
-      case OSCADDR_SETPOS => msgSetPos(msg)
-      case OSCADDR_CLEAR => msgClear(msg)
-      case OSCADDR_HCLEAR => msgClearHeader(msg)
-      case OSCADDR_RE_ADD(elem) => msgAddElement(elem, msg)
-      case OSCADDR_RE_HADD(elem) => msgAddElementToHeader(elem, msg)
+      case OSCADDR_SYNC => msgSync(msg, theView)
+      case OSCADDR_SETPOS => msgSetPos(msg, theView)
+      case OSCADDR_CLEAR => msgClear(msg, theView)
+      case OSCADDR_HCLEAR => msgClearHeader(msg, theView)
+      case OSCADDR_SETTIMEWIN => msgSetTimeWindow(msg, theView)
+      case OSCADDR_SETPOSWIN => msgSetPosWindow(msg, theView)
+      case OSCADDR_SETPOSOFFSET => msgSetPosOffset(msg, theView)
+      case OSCADDR_SETSPEED => msgSetSpeed(msg, theView)
+      case OSCADDR_RE_ADD(elem) => msgAddElement(elem, msg, theView)
+      case OSCADDR_RE_HADD(elem) => msgAddElementToHeader(elem, msg, theView)
       case _ =>
     }
     //--
