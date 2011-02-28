@@ -80,15 +80,117 @@ class Score extends PApplet with Colors with Maths with Randoms {
   }
   */
 
-  def oscEvent(theOscMessage :OscMessage) {
-    println("### received an osc message."  
-      + " addrpattern: " + theOscMessage.addrPattern 
-      + " typetag: " + theOscMessage.typetag
-      + " from: " + theOscMessage.address + ":" + theOscMessage.port
-    )
-    //background(random(127))
+  val names2elements = Map(
+    "simpleLine"    -> score.SimpleLine,
+    "simpleNote"    -> score.SimpleNote,
+    "staff5"        -> score.Staff5,
+    "staffReg3"     -> score.StaffReg3
+  )
+
+  // general purpose function
+  def rsplit2(str: String, list: List[String] = List()): List[String] = {
+    val (str1, str2) = str splitAt 2
+    if (str2.size < 2)
+      return (str1 :: list).reverse
+    else
+      rsplit2(str2, str1 :: list)
   }
 
+  private def elementTypetag2Props (msg:OscMessage): Map[String, Any] = {
+    var props = scala.collection.mutable.Map[String, Any]()
+    rsplit2(msg.typetag drop 3).zipWithIndex foreach { 
+      t =>  
+          t._1 match {
+            case "si" => props += (msg.get(t._2 * 2 + 3).stringValue -> 
+              msg.get(t._2 * 2 + 4).intValue)
+            case "sf" => props += (msg.get(t._2 * 2 + 3).stringValue -> 
+              msg.get(t._2 * 2 + 4).floatValue)
+            case "ss" => props += (msg.get(t._2 * 2 + 3).stringValue -> 
+              msg.get(t._2 * 2 + 4).stringValue)
+            case _ =>
+          }
+    }
+    props.toMap
+  }
+
+  private def msgToElement (elemName: String, msg: OscMessage): Option[score.Element] = {
+    (names2elements get elemName) match {
+      case Some(elem) if (msg.typetag.startsWith("iff")) => { 
+        val partID = msg.get(0).intValue
+        val beg = msg.get(1).floatValue
+        val dur = msg.get(2).floatValue
+        val props :Map[String, Any] = elementTypetag2Props(msg)
+        Some(elem(beg, dur, props))
+      }
+      case _ => None
+    }
+  }
+
+  private def msgAddElement (elemName: String, msg: OscMessage) {
+    msgToElement(elemName, msg) match {
+      case Some(elem) => scoreView.addElement(elem)
+      case _ =>
+    }
+  }
+
+  private def msgAddElementToHeader (elemName: String, msg: OscMessage) {
+    msgToElement(elemName, msg) match {
+      case Some(elem) => scoreView.addHeaderElement(elem)
+      case _ =>
+    }
+  }
+
+  private def msgSync (msg: OscMessage) {
+    println("syncing!")
+  }
+
+  private def msgSetPos (msg: OscMessage) {
+    println("set pos!")
+    if (msg.typetag startsWith "if") {
+      pos = msg.get(1).floatValue
+    }
+  }
+
+  private def msgClear (msg: OscMessage) {
+    println("clear score!")
+    scoreView.clearScore
+  }
+
+  private def msgClearHeader (msg: OscMessage) {
+    println("clear header!")
+    scoreView.clearHeader
+  }
+
+  import scala.util.matching.Regex
+  val OSCADDR_RE_ADD = new Regex("""/imps/add/(.+)""")
+  val OSCADDR_RE_HADD = new Regex("""/imps/hadd/(.+)""")
+  val OSCADDR_SYNC = "/imps/sync"
+  val OSCADDR_CLEAR = "/imps/clear"
+  val OSCADDR_HCLEAR = "/imps/hclear"
+  val OSCADDR_SETPOS = "/imps/setpos"
+
+  // *** MAIN OSC RESPONDER:
+  def oscEvent(msg :OscMessage) {
+    val addr = msg.addrPattern
+    val tt = msg.typetag
+    val ip = msg.address
+    val port = msg.port
+
+    addr match {
+      case OSCADDR_SYNC => msgSync(msg)
+      case OSCADDR_SETPOS => msgSetPos(msg)
+      case OSCADDR_CLEAR => msgClear(msg)
+      case OSCADDR_HCLEAR => msgClearHeader(msg)
+      case OSCADDR_RE_ADD(elem) => msgAddElement(elem, msg)
+      case OSCADDR_RE_HADD(elem) => msgAddElementToHeader(elem, msg)
+      case _ =>
+    }
+    //--
+    println("r!OSC:" + addr + " [" + tt + "] " + ip + ":" + port)
+  }
+
+
+  // +++ TESTING
   def prepareDummyDataForTests {
     // TESTING: adding dummy data
     for (i <- Iterator.range(0, 15))
