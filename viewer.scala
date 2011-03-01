@@ -27,35 +27,59 @@ class Score extends PApplet with Colors with Maths with Randoms {
   val myRemoteLocation = new NetAddress("127.0.0.1", 57120)
 
   //val scoreView = new score.Window(this, 1280, 500, 0.1f) 
-  lazy val scoreView = new score.Window(this, width, height, 0.1f) 
+  //lazy val scoreView = new score.Window(this, width, height, 0.1f) 
+
+  var scores :Array[score.Window] = _
 
   lazy val fontReg = loadFont("lib/TeXGyreTermes-Regular-48.vlw")
 
   //scoreView.dumpVars
 
   var pos: Float = 0.f
+  var speed: Float = 1.f
 
 
   override def setup() {
-    size(1280, 500)
+    size(1280, 500, P2D)
     //size(920, 420)
     //size(1000, 800)
     //size(700, 500)
     frameRate(30)
     smooth
     frame.setTitle("The Score")
-    oscP5 // właściwa inicjacja (lazy)
+    textFont(fontReg) // lazy fontReg eval + select as default font
+
+    // -- oscP5
+    oscP5 // właściwe inicjowanie (lazy)
+
+    // -- scores
+    val _scores = scala.collection.mutable.ArrayBuffer[score.Window]()
+
+    val scoreView = new score.Window(this, width, height / 2, 0.1f) 
+    prepareDummyDataForTests(scoreView)
     scoreView.viewX = 0
     scoreView.viewY = 0
-    prepareDummyDataForTests
-    //fontReg
-    textFont(fontReg)
+    scoreView.partID = 0
+    _scores += scoreView // add scores to general list
+
+    val scoreView2 = new score.Window(this, width, height / 2, 0.1f) 
+    prepareDummyDataForTests(scoreView2)
+    scoreView2.viewX = 0
+    scoreView2.viewY = height / 2
+    scoreView2.partID = 1
+    _scores += scoreView2 // add scores to general list
+
+    scores = _scores.toArray
   }
 
   override def draw() {
+    val scoreView = scores(0)
+    val scoreView2 = scores(1)
     background(255)
     scoreView.pos = pos
+    scoreView2.pos = pos
     scoreView.draw
+    scoreView2.draw
 
     pos += 0.03f
 
@@ -66,6 +90,10 @@ class Score extends PApplet with Colors with Maths with Randoms {
     text(pos.toString take 6, 10, 100);
     fill(0,55,0)
     text(scoreView.elementsNumber.toString, 10, 50);
+    noFill
+    stroke(255,0,0)
+    strokeWeight(10)
+    line(0, scoreView2.viewY, width, scoreView2.viewY)
     popStyle
   }
 
@@ -203,21 +231,24 @@ class Score extends PApplet with Colors with Maths with Randoms {
     val tt = msg.typetag
     val ip = msg.address
     val port = msg.port
-    val theView = scoreView
 
-    if (addr.startsWith("/imps") && tt.startsWith("i"))
-    addr match {
-      case OSCADDR_SYNC => msgSync(msg, theView)
-      case OSCADDR_SETPOS => msgSetPos(msg, theView)
-      case OSCADDR_CLEAR => msgClear(msg, theView)
-      case OSCADDR_HCLEAR => msgClearHeader(msg, theView)
-      case OSCADDR_SETTIMEWIN => msgSetTimeWindow(msg, theView)
-      case OSCADDR_SETPOSWIN => msgSetPosWindow(msg, theView)
-      case OSCADDR_SETPOSOFFSET => msgSetPosOffset(msg, theView)
-      case OSCADDR_SETSPEED => msgSetSpeed(msg, theView)
-      case OSCADDR_RE_ADD(elem) => msgAddElement(elem, msg, theView)
-      case OSCADDR_RE_HADD(elem) => msgAddElementToHeader(elem, msg, theView)
-      case _ =>
+    if (addr.startsWith("/imps") && tt.startsWith("i")) {
+      val partID :Int = msg.get(0).intValue
+      val ss = if (partID == -1) scores
+        else scores filter (_.partID == partID)
+      addr match {
+        case OSCADDR_SYNC =>  ss foreach (msgSync(msg, _))
+        case OSCADDR_SETPOS => ss foreach (msgSetPos(msg, _))
+        case OSCADDR_CLEAR => ss foreach (msgClear(msg, _))
+        case OSCADDR_HCLEAR => ss foreach (msgClearHeader(msg, _))
+        case OSCADDR_SETTIMEWIN => ss foreach (msgSetTimeWindow(msg, _))
+        case OSCADDR_SETPOSWIN => ss foreach (msgSetPosWindow(msg, _))
+        case OSCADDR_SETPOSOFFSET => ss foreach (msgSetPosOffset(msg, _))
+        case OSCADDR_SETSPEED => ss foreach (msgSetSpeed(msg, _))
+        case OSCADDR_RE_ADD(elem) => ss foreach (msgAddElement(elem, msg, _))
+        case OSCADDR_RE_HADD(elem) => ss foreach (msgAddElementToHeader(elem, msg, _))
+        case _ =>
+      }
     }
     //--
     println("r!OSC:" + addr + " [" + tt + "] " + ip + ":" + port)
