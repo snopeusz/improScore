@@ -256,10 +256,10 @@ class Score extends PApplet with Colors with Maths with Randoms {
 
 
   // +++ TESTING
-  def prepareDummyDataForTests {
+  def prepareDummyDataForTests (theView: score.Window) {
     // TESTING: adding dummy data
     for (i <- Iterator.range(0, 15))
-      scoreView.addElement( new score.SimpleLine (
+      theView.addElement( new score.SimpleLine (
         (math.random * 30).toFloat,
         (math.random * 10).toFloat,
         Map("pch" -> (math.random * 10).toInt.toFloat, 
@@ -267,10 +267,10 @@ class Score extends PApplet with Colors with Maths with Randoms {
           "dyn" -> (math.random * 0.75f + 0.25f).toFloat )
         //Map[String, Float]
       ))
-    scoreView.addElement( new score.Staff5 (1.f, 15.f, Map()))
-    scoreView.addElement( new score.StaffReg3 (16.f, 25.f, Map()))
+    theView.addElement( new score.Staff5 (1.f, 15.f, Map()))
+    theView.addElement( new score.StaffReg3 (16.f, 25.f, Map()))
 
-    scoreView.addHeaderElement( new score.Staff5 (0.f, 1.f, Map()))
+    theView.addHeaderElement( new score.Staff5 (0.f, 1.f, Map()))
   }
 
 }
