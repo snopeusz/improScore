@@ -55,6 +55,8 @@ class Window(
 
   var partID: Int = 0
 
+  var cursorColor: Int = 1175767125
+
   //dumpVars
 
   def pos = _pos
@@ -132,7 +134,8 @@ class Window(
 
     // cursor:
     a.pushStyle
-    a.fill(20, 200, 85, 40)
+    //a.fill(20, 200, 85, 40)
+    a.fill(cursorColor)
     a.noStroke
     a.rect(viewX + posXposition, viewY, posWindowWidth, viewHeight)
     a.popStyle
