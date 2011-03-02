@@ -38,6 +38,8 @@ class Score extends PApplet with Colors with Maths with Randoms {
   var pos: Float = 0.f
   var speed: Float = 1.f
 
+  var drawDebugInfo = true
+
 
   override def setup() {
     size(1280, 500, P2D)
@@ -81,20 +83,24 @@ class Score extends PApplet with Colors with Maths with Randoms {
     scoreView.draw
     scoreView2.draw
 
+
+    if (drawDebugInfo) {
+      pushStyle
+      fill(0)
+      text(frameRate.toString take 6, 10, 150);
+      fill(55,0,0)
+      text(pos.toString take 6, 10, 100);
+      fill(0,55,0)
+      text(scoreView.elementsNumber.toString, 10, 50);
+      noFill
+      stroke(255,0,0)
+      strokeWeight(10)
+      line(0, scoreView2.viewY, width, scoreView2.viewY)
+      popStyle
+    }
+
     pos += 0.03f
 
-    pushStyle
-    fill(0)
-    text(frameRate.toString take 6, 10, 150);
-    fill(55,0,0)
-    text(pos.toString take 6, 10, 100);
-    fill(0,55,0)
-    text(scoreView.elementsNumber.toString, 10, 50);
-    noFill
-    stroke(255,0,0)
-    strokeWeight(10)
-    line(0, scoreView2.viewY, width, scoreView2.viewY)
-    popStyle
   }
 
   // tests...
