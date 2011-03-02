@@ -89,7 +89,7 @@ class Window(
 
   def posOffset = _posOffset
   def posOffset_= (newOffset: Float) {
-    if (newOffset > 0.f && newOffset < _timeWindow) {
+    if (newOffset >= 0.f && newOffset < _timeWindow) {
       _posOffset = newOffset
       calculateInternals
     }
@@ -99,8 +99,10 @@ class Window(
 
   def posWindow = _posWindow
   def posWindow_= (newWindow: Float) {
-    if (newWindow > 0.f)
+    if (newWindow > 0.f) {
       _posWindow = newWindow
+      calculateInternals
+    }
   }
 
   // --- available in Elements' 'draw' method --- //
