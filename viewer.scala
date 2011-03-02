@@ -237,6 +237,11 @@ class Score extends PApplet with Colors with Maths with Randoms {
     if (msg.typetag()(1) == 'i')
       theView.bypass = (msg.get(1).intValue > 0)
   }
+  private def msgSetGrid (msg: OscMessage, theView: score.Window) {
+    println("set grid!")
+    if (msg.typetag()(1) == 'i')
+      theView.drawGrid = (msg.get(1).intValue > 0)
+  }
 
   // this should be in scoreElement.scala, shouldn't it ?
   val names2elements = Map(
@@ -260,6 +265,7 @@ class Score extends PApplet with Colors with Maths with Randoms {
   val OSCADDR_SETSPEED = "/imps/setSpeed"
   val OSCADDR_SETGRAVITY = "/imps/setGravity"
   val OSCADDR_SETBYPASS = "/imps/setBypass"
+  val OSCADDR_SETGRID = "/imps/setGrid"
 
   // *** MAIN OSC RESPONDER:
   def oscEvent(msg :OscMessage) {
@@ -285,6 +291,7 @@ class Score extends PApplet with Colors with Maths with Randoms {
         case OSCADDR_SETPOSWIN => ss foreach (msgSetPosWindow(msg, _))
         case OSCADDR_SETPOSOFFSET => ss foreach (msgSetPosOffset(msg, _))
         case OSCADDR_SETBYPASS => ss foreach (msgSetBypass(msg, _))
+        case OSCADDR_SETGRID => ss foreach (msgSetGrid(msg, _))
         case OSCADDR_RE_ADD(elem) => ss foreach (msgAddElement(elem, msg, _))
         case OSCADDR_RE_HADD(elem) => ss foreach (msgAddElementToHeader(elem, msg, _))
         case _ =>
