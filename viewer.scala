@@ -35,8 +35,13 @@ class Score extends PApplet with Colors with Maths with Randoms {
 
   //scoreView.dumpVars
 
+  /** actual score position */
   var pos: Float = 0.f
+  /** movement of notation */
   var speed: Float = 1.f
+  var actual_speed: Float = 1.f
+  var nextPos: Float = pos + actual_speed
+  var gravity: Float = 0.2f
 
   var drawDebugInfo = true
 
@@ -98,8 +103,10 @@ class Score extends PApplet with Colors with Maths with Randoms {
       line(0, scoreView2.viewY, width, scoreView2.viewY)
       popStyle
     }
-
-    pos += 0.03f
+    
+    actual_speed += (speed - actual_speed) * gravity
+    if (frameRate > 0.f)
+      pos += actual_speed / frameRate
 
   }
 
@@ -154,6 +161,33 @@ class Score extends PApplet with Colors with Maths with Randoms {
   }
 
   // proper handling of OSC traffic
+  private def msgSync (msg: OscMessage, theViews: Iterable[score.Window]) {
+    println("syncing!")
+    if (msg.typetag startsWith "iff") {
+      val nextPos = msg.get(1).floatValue
+      val time2next = msg.get(2).floatValue
+      speed = (nextPos - pos) / time2next
+
+    }
+  }
+
+  private def msgSetGravity (msg: OscMessage, theViews: Iterable[score.Window]) {
+    println("set gravity!")
+    if (msg.typetag startsWith "if") 
+      gravity = msg.get(1).floatValue
+  }
+  private def msgSetSpeed (msg: OscMessage, theViews: Iterable[score.Window]) {
+    println("set speed!")
+    if (msg.typetag startsWith "if") 
+      speed = msg.get(1).floatValue
+  }
+
+  private def msgSetPos (msg: OscMessage, theViews: Iterable[score.Window]) {
+    println("set pos!")
+    if (msg.typetag startsWith "if") 
+      pos = msg.get(1).floatValue
+  }
+
   private def msgAddElement (
     elemName: String, msg: OscMessage, theView: score.Window
   ) {
@@ -172,16 +206,6 @@ class Score extends PApplet with Colors with Maths with Randoms {
     }
   }
 
-  private def msgSync (msg: OscMessage, theView: score.Window) {
-    println("syncing!")
-  }
-
-  private def msgSetPos (msg: OscMessage, theView: score.Window) {
-    println("set pos!")
-    if (msg.typetag startsWith "if") {
-      pos = msg.get(1).floatValue
-    }
-  }
 
   private def msgClear (msg: OscMessage, theView: score.Window) {
     println("clear score!")
@@ -196,19 +220,18 @@ class Score extends PApplet with Colors with Maths with Randoms {
 
   private def msgSetTimeWindow (msg: OscMessage, theView: score.Window) {
     println("set timeWindow!")
-    // TODO
+    if (msg.typetag()(1) == 'f')
+      theView.timeWindow = msg.get(1).floatValue
   }
   private def msgSetPosWindow (msg: OscMessage, theView: score.Window) {
     println("set posWindow!")
-    // TODO
+    if (msg.typetag()(1) == 'f')
+      theView.posWindow = msg.get(1).floatValue
   }
   private def msgSetPosOffset (msg: OscMessage, theView: score.Window) {
     println("set posOffset!")
-    // TODO
-  }
-  private def msgSetSpeed (msg: OscMessage, theView: score.Window) {
-    println("set speed!")
-    // TODO
+    if (msg.typetag()(1) == 'f')
+      theView.posOffset = msg.get(1).floatValue
   }
 
   // this should be in scoreElement.scala, shouldn't it ?
@@ -230,6 +253,7 @@ class Score extends PApplet with Colors with Maths with Randoms {
   val OSCADDR_SETPOSWIN = "/imps/setPosWin"
   val OSCADDR_SETPOSOFFSET = "/imps/setPosOffset"
   val OSCADDR_SETSPEED = "/imps/setSpeed"
+  val OSCADDR_SETGRAVITY = "/imps/setGravity"
 
   // *** MAIN OSC RESPONDER:
   def oscEvent(msg :OscMessage) {
@@ -243,14 +267,17 @@ class Score extends PApplet with Colors with Maths with Randoms {
       val ss = if (partID == -1) scores
         else scores filter (_.partID == partID)
       addr match {
-        case OSCADDR_SYNC =>  ss foreach (msgSync(msg, _))
-        case OSCADDR_SETPOS => ss foreach (msgSetPos(msg, _))
+        // -- global settings (for every view)
+        case OSCADDR_SYNC =>  msgSync(msg, ss)
+        case OSCADDR_SETGRAVITY =>  msgSetGravity(msg, ss)
+        case OSCADDR_SETSPEED => msgSetSpeed(msg, ss)
+        case OSCADDR_SETPOS => msgSetPos(msg, ss)
+        // -- settings for specific view:
         case OSCADDR_CLEAR => ss foreach (msgClear(msg, _))
         case OSCADDR_HCLEAR => ss foreach (msgClearHeader(msg, _))
         case OSCADDR_SETTIMEWIN => ss foreach (msgSetTimeWindow(msg, _))
         case OSCADDR_SETPOSWIN => ss foreach (msgSetPosWindow(msg, _))
         case OSCADDR_SETPOSOFFSET => ss foreach (msgSetPosOffset(msg, _))
-        case OSCADDR_SETSPEED => ss foreach (msgSetSpeed(msg, _))
         case OSCADDR_RE_ADD(elem) => ss foreach (msgAddElement(elem, msg, _))
         case OSCADDR_RE_HADD(elem) => ss foreach (msgAddElementToHeader(elem, msg, _))
         case _ =>
