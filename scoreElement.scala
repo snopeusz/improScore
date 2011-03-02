@@ -22,6 +22,7 @@ abstract class Element extends Maths
   }
 }
 
+/* -------------------------------------------------- */
 case class SimpleNote (
   val beg: Float,
   val dummydur: Float,
@@ -58,6 +59,7 @@ case class SimpleNote (
   }
 }
 
+/* -------------------------------------------------- */
 case class SimpleLine (
   val beg: Float,
   val dur: Float,
@@ -85,6 +87,7 @@ case class SimpleLine (
   }
 }
 
+/* -------------------------------------------------- */
 case class Staff5 (
   val beg: Float,
   val dur: Float,
@@ -111,6 +114,7 @@ case class Staff5 (
   }
 }
 
+/* -------------------------------------------------- */
 case class StaffReg3 (
   val beg: Float,
   val dur: Float,
@@ -130,6 +134,28 @@ case class StaffReg3 (
     v.a.line(x, y + (7*h) , x1, y + (7*h))
     v.a.line(x, y - (20*h) , x1, y - (20*h))
     v.a.line(x, y - (7*h) , x1, y - (7*h))
+    v.a.popStyle
+  }
+}
+
+/* -------------------------------------------------- */
+case class BarLine (
+  val beg: Float,
+  val dur: Float,
+  val params: Map[String, Any]
+) extends Element  {
+  val color: Int = params.getOrElse("color", 2014581785).asInstanceOf[Int]
+  val linewidth: Float = params.getOrElse("width", 0.2f).asInstanceOf[Float]
+  def draw(v: ViewForScore) 
+  {
+    val x = v.beats2X(beg)
+    val y = v.pch2Y(20.f)
+    val y1 = v.pch2Y(-20.f)
+    val h = v.pch2H(1.f)
+    v.a.pushStyle
+    v.a.stroke(color)
+    v.a.strokeWeight(h * linewidth)
+    v.a.line(x, y, x, y1)
     v.a.popStyle
   }
 }

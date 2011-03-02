@@ -243,6 +243,7 @@ class Score extends PApplet with Colors with Maths with Randoms {
   val names2elements = Map(
     "simpleLine"    -> score.SimpleLine,
     "simpleNote"    -> score.SimpleNote,
+    "barLine"       -> score.BarLine,
     "staff5"        -> score.Staff5,
     "staffReg3"     -> score.StaffReg3
   )

@@ -58,6 +58,7 @@ class Window(
   var cursorColor: Int = 1175767125
 
   var bypass: Boolean = false
+  var drawGrid: Boolean = true
 
   //dumpVars
 
@@ -149,6 +150,20 @@ class Window(
       a.noStroke
       a.rect(viewX + posXposition, viewY, posWindowWidth, viewHeight)
       a.popStyle
+
+      // +++ grid
+      if (drawGrid) {
+        a.pushStyle
+        a.stroke(200)
+        a.strokeWeight(yUnit * 0.5)
+        //val x0 = viewX + headWidth + (((posOffset % 1) - (pos % 1)) * xUnit)
+        //val x0 = viewX + headWidth + (((pos - posOffset) % 1) * xUnit)
+        val x0 = viewX + headWidth + posOffsetWidth - ((pos % 1) * xUnit)
+        //...
+        for (x <- 0 until _timeWindow.round)
+          a.line(x0 + (x * xUnit), viewY, x0 + (x * xUnit), viewY + viewHeight)
+        a.popStyle
+      }
 
       // *** SCORE ELEMENTS
       for {
