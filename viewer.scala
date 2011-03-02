@@ -32,6 +32,7 @@ class Score extends PApplet with Colors with Maths with Randoms {
   var scores :Array[score.Window] = _
 
   lazy val fontReg = loadFont("lib/TeXGyreTermes-Regular-48.vlw")
+  lazy val fontBI = loadFont("lib/TeXGyreTermes-BoldItalic-48.vlw")
 
   //scoreView.dumpVars
 
@@ -48,12 +49,10 @@ class Score extends PApplet with Colors with Maths with Randoms {
 
   override def setup() {
     size(1280, 500, P2D)
-    //size(920, 420)
-    //size(1000, 800)
-    //size(700, 500)
     frameRate(30)
     smooth
     frame.setTitle("The Score")
+    fontBI // lazy FontBI
     textFont(fontReg) // lazy fontReg eval + select as default font
 
     // -- oscP5
