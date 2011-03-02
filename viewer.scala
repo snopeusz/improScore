@@ -233,6 +233,11 @@ class Score extends PApplet with Colors with Maths with Randoms {
     if (msg.typetag()(1) == 'f')
       theView.posOffset = msg.get(1).floatValue
   }
+  private def msgSetBypass (msg: OscMessage, theView: score.Window) {
+    println("set bypass!")
+    if (msg.typetag()(1) == 'i')
+      theView.bypass = (msg.get(1).intValue > 0)
+  }
 
   // this should be in scoreElement.scala, shouldn't it ?
   val names2elements = Map(
@@ -254,6 +259,7 @@ class Score extends PApplet with Colors with Maths with Randoms {
   val OSCADDR_SETPOSOFFSET = "/imps/setPosOffset"
   val OSCADDR_SETSPEED = "/imps/setSpeed"
   val OSCADDR_SETGRAVITY = "/imps/setGravity"
+  val OSCADDR_SETBYPASS = "/imps/setBypass"
 
   // *** MAIN OSC RESPONDER:
   def oscEvent(msg :OscMessage) {
@@ -278,6 +284,7 @@ class Score extends PApplet with Colors with Maths with Randoms {
         case OSCADDR_SETTIMEWIN => ss foreach (msgSetTimeWindow(msg, _))
         case OSCADDR_SETPOSWIN => ss foreach (msgSetPosWindow(msg, _))
         case OSCADDR_SETPOSOFFSET => ss foreach (msgSetPosOffset(msg, _))
+        case OSCADDR_SETBYPASS => ss foreach (msgSetBypass(msg, _))
         case OSCADDR_RE_ADD(elem) => ss foreach (msgAddElement(elem, msg, _))
         case OSCADDR_RE_HADD(elem) => ss foreach (msgAddElementToHeader(elem, msg, _))
         case _ =>

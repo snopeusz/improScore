@@ -57,6 +57,8 @@ class Window(
 
   var cursorColor: Int = 1175767125
 
+  var bypass: Boolean = false
+
   //dumpVars
 
   def pos = _pos
@@ -132,39 +134,41 @@ class Window(
 
   */
   def draw {
-    // borders of view
-    //a.rect(viewX, viewY, viewWidth, viewHeight)
-    //val headScoreBorderX = viewX + headWidth
-    //a.line(headScoreBorderX, viewY,headScoreBorderX, viewY+viewHeight)
+    if (!bypass) {
+      // --- borders of view
+      //a.rect(viewX, viewY, viewWidth, viewHeight)
+      //val headScoreBorderX = viewX + headWidth
+      //a.line(headScoreBorderX, viewY,headScoreBorderX, viewY+viewHeight)
 
-    // cursor:
-    a.pushStyle
-    //a.fill(20, 200, 85, 40)
-    a.fill(cursorColor)
-    a.noStroke
-    a.rect(viewX + posXposition, viewY, posWindowWidth, viewHeight)
-    a.popStyle
+      // --- cursor:
+      a.pushStyle
+      //a.fill(20, 200, 85, 40)
+      a.fill(cursorColor)
+      a.noStroke
+      a.rect(viewX + posXposition, viewY, posWindowWidth, viewHeight)
+      a.popStyle
 
-    // *** SCORE ELEMENTS
-    for {
-      element <- _elements.toArray
-      if ((element.beg < _pos + _timeWindow - _posOffset) 
-        && (element.end > _pos - _posOffset))
-    } element.draw(this)
+      // *** SCORE ELEMENTS
+      for {
+        element <- _elements.toArray
+        if ((element.beg < _pos + _timeWindow - _posOffset) 
+            && (element.end > _pos - _posOffset))
+      } element.draw(this)
 
-    // todo: gradient za nagłówkiem (white->transparent)
-    a.pushStyle
-    a.fill(255)
-    a.noStroke
-    a.rect(viewX, viewY, headWidth, viewHeight)
-    a.popStyle
+      // todo: gradient za nagłówkiem (white->transparent)
+      a.pushStyle
+      a.fill(255)
+      a.noStroke
+      a.rect(viewX, viewY, headWidth, viewHeight)
+      a.popStyle
 
-    // *** HEADER ELEMENTS
-    for {
-      element <- _headerElements.toArray
-    } element.draw(headerWindow)
+      // *** HEADER ELEMENTS
+      for {
+        element <- _headerElements.toArray
+      } element.draw(headerWindow)
 
-    // ...
+      // ...
+    }
   }
 
   def addElement(newElement: Element) {
