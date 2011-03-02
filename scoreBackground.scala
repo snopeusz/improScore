@@ -95,6 +95,11 @@ class Window(
         " has to be in range 0 - timeWindow(" + _timeWindow + ")")
   }
 
+  def posWindow = _posWindow
+  def posWindow_= (newWindow: Float) {
+    if (newWindow > 0.f)
+      _posWindow = newWindow
+  }
 
   // --- available in Elements' 'draw' method --- //
   def pch2Y (pch: Float): Float = 
