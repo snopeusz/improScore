@@ -60,7 +60,7 @@ class Window(
   var cursorColor: Int = 1175767125
 
   var bypass: Boolean = false
-  var drawGrid: Boolean = true
+  var drawGrid: Boolean = false
 
   //dumpVars
 

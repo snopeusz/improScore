@@ -44,7 +44,7 @@ class ScoreDisplay extends PApplet with Colors with Maths with Randoms {
   var nextPos: Float = pos + actual_speed
   var gravity: Float = 0.2f
 
-  var drawDebugInfo = true
+  var drawDebugInfo = false
 
 
   override def setup() {
@@ -62,14 +62,14 @@ class ScoreDisplay extends PApplet with Colors with Maths with Randoms {
     val _scores = scala.collection.mutable.ArrayBuffer[score.Window]()
 
     val scoreView = new score.Window(this, width, height / 2, 0.1f) 
-    prepareDummyDataForTests(scoreView)
+    //prepareDummyDataForTests(scoreView)
     scoreView.viewX = 0
     scoreView.viewY = 0
     scoreView.partID = 0
     _scores += scoreView // add scores to general list
 
     val scoreView2 = new score.Window(this, width, height / 2, 0.1f) 
-    prepareDummyDataForTests(scoreView2)
+    //prepareDummyDataForTests(scoreView2)
     scoreView2.viewX = 0
     scoreView2.viewY = height / 2
     scoreView2.partID = 1
