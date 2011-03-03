@@ -44,6 +44,7 @@ class ScoreDisplay extends PApplet with Colors with Maths with Randoms {
   var gravity: Float = 0.2f
 
   var drawDebugInfo = false
+  var drawSeparator = true
 
 
   override def setup() {
@@ -95,6 +96,10 @@ class ScoreDisplay extends PApplet with Colors with Maths with Randoms {
       text(pos.toString take 6, 10, 100);
       fill(0,55,0)
       text(scoreView.elementsNumber.toString, 10, 50);
+      popStyle
+    }
+    if (drawSeparator) {
+      pushStyle
       noFill
       stroke(255,0,0)
       strokeWeight(10)
@@ -118,6 +123,14 @@ class ScoreDisplay extends PApplet with Colors with Maths with Randoms {
     oscP5.send(myMessage, myRemoteLocation)
   }
   */
+
+  override def keyPressed() {
+    key match {
+      case 's' => drawSeparator = !drawSeparator
+      case 'd' => drawDebugInfo = !drawDebugInfo
+      case _ =>
+    }
+  }
 
   /* ==== Utility methods for handling OSC traffic ==== */
   // general purpose function
