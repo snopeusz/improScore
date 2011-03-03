@@ -6,7 +6,9 @@ import PConstants._
 import impro.spde._
 
 abstract class ViewForScore {
-  val a: PApplet
+  val a: impro.ScoreDisplay // PApplet
+  //val fontR: PFont
+  //val fontBI: PFont
   def pch2Y (pch: Float): Float 
   def pch2H (pch: Float): Float
   def beats2X (beats: Float): Float
@@ -14,7 +16,7 @@ abstract class ViewForScore {
 }
 
 class Window(
-  val a: PApplet,
+  val a: impro.ScoreDisplay, // PApplet,
   val viewWidth: Float = 600.f,
   val viewHeight: Float = 400.f,
   val xHeadRatio: Float = 0.15f,
@@ -118,7 +120,7 @@ class Window(
 
   val temp_a = a
   val headerWindow = new ViewForScore {
-    val a: PApplet = temp_a
+    val a: impro.ScoreDisplay = temp_a
     def pch2Y (pch: Float): Float = 
       viewY + yCenter + (pch * yUnit * -1.f)
     def pch2H (pch: Float): Float = yUnit * pch

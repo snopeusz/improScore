@@ -13,11 +13,11 @@ import impro._
 object ScoreRunner {
   def main(args: Array[String]) {
     //PApplet.main(args ++ Array("--present", "impro.Score") ) 
-    PApplet.main(args  ++ Array("impro.Score") ) 
+    PApplet.main(args  ++ Array("impro.ScoreDisplay") ) 
   }
 }
 
-class Score extends PApplet with Colors with Maths with Randoms {
+class ScoreDisplay extends PApplet with Colors with Maths with Randoms {
 
   import PApplet._
 
