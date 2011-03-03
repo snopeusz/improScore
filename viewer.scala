@@ -39,9 +39,8 @@ class ScoreDisplay extends PApplet with Colors with Maths with Randoms {
   /** actual score position */
   var pos: Float = 0.f
   /** movement of notation */
-  var speed: Float = 1.f
-  var actual_speed: Float = 1.f
-  var nextPos: Float = pos + actual_speed
+  var speed: Float = 0.f
+  var actual_speed: Float = 0.f
   var gravity: Float = 0.2f
 
   var drawDebugInfo = false
