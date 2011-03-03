@@ -242,6 +242,13 @@ class ScoreDisplay extends PApplet with Colors with Maths with Randoms {
     if (msg.typetag()(1) == 'i')
       theView.drawGrid = (msg.get(1).intValue > 0)
   }
+  private def msgDrawDebugInfo (msg: OscMessage, theViews: Iterable[score.Window]) {
+    println("set draw debug info!")
+    if (msg.typetag.size == 1)
+      drawDebugInfo = !drawDebugInfo
+    else if (msg.typetag()(1) == 'i')
+      drawDebugInfo = (msg.get(1).intValue > 0)
+  }
 
   // this should be in scoreElement.scala, shouldn't it ?
   val names2elements = Map(
@@ -268,6 +275,7 @@ class ScoreDisplay extends PApplet with Colors with Maths with Randoms {
   val OSCADDR_SETGRAVITY = "/imps/setGravity"
   val OSCADDR_SETBYPASS = "/imps/setBypass"
   val OSCADDR_SETGRID = "/imps/setGrid"
+  val OSCADDR_DRAWDEBUGINFO = "/imps/drawDebugInfo"
 
   // *** MAIN OSC RESPONDER:
   def oscEvent(msg :OscMessage) {
@@ -283,9 +291,10 @@ class ScoreDisplay extends PApplet with Colors with Maths with Randoms {
       addr match {
         // -- global settings (for every view)
         case OSCADDR_SYNC =>  msgSync(msg, ss)
+        case OSCADDR_SETPOS => msgSetPos(msg, ss)
         case OSCADDR_SETGRAVITY =>  msgSetGravity(msg, ss)
         case OSCADDR_SETSPEED => msgSetSpeed(msg, ss)
-        case OSCADDR_SETPOS => msgSetPos(msg, ss)
+        case OSCADDR_DRAWDEBUGINFO => msgDrawDebugInfo(msg, ss)
         // -- settings for specific view:
         case OSCADDR_CLEAR => ss foreach (msgClear(msg, _))
         case OSCADDR_HCLEAR => ss foreach (msgClearHeader(msg, _))
