@@ -53,6 +53,7 @@ case class SimpleNote (
     val y = v.pch2Y(pch)
     v.a.pushStyle
     v.a.fill(color)
+    v.a.noStroke
     //v.a.ellipseMode(CORNER)
     v.a.ellipse(x, y , w, h)
     v.a.popStyle
@@ -80,7 +81,7 @@ case class SimpleLine (
     val y1 = v.pch2Y(pchEnd)
     val lineWidth = yu * dyn
     v.a.pushStyle
-    v.a.fill(color)
+    v.a.stroke(color)
     v.a.strokeWeight(lineWidth)
     v.a.line(x, y, x1, y1)
     v.a.popStyle
