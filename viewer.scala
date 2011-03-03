@@ -248,6 +248,7 @@ class ScoreDisplay extends PApplet with Colors with Maths with Randoms {
     "simpleLine"    -> score.SimpleLine,
     "simpleNote"    -> score.SimpleNote,
     "barLine"       -> score.BarLine,
+    "text"          -> score.Text,
     "staff5"        -> score.Staff5,
     "staffReg3"     -> score.StaffReg3
   )

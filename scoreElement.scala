@@ -159,3 +159,26 @@ case class BarLine (
     v.a.popStyle
   }
 }
+
+/* -------------------------------------------------- */
+case class Text (
+  val beg: Float,
+  val dur: Float,
+  val params: Map[String, Any]
+) extends Element  {
+  val color: Int = params.getOrElse("color", 0).asInstanceOf[Int]
+  val size: Float = params.getOrElse("size", 8.f).asInstanceOf[Float]
+  val str: String = params.getOrElse("text", "").asInstanceOf[String]
+  val pch: Float = params.getOrElse("pch", 0.f).asInstanceOf[Float]
+  def draw(v: ViewForScore) 
+  {
+    val x = v.beats2X(beg)
+    val y = v.pch2Y(pch)
+    val h = v.pch2H(1.f)
+    v.a.pushStyle
+    v.a.textFont(v.a.fontReg, h * size)
+    v.a.fill(color)
+    v.a.text(str,x, y)
+    v.a.popStyle
+  }
+}
